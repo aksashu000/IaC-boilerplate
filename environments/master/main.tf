@@ -27,6 +27,7 @@ resource "google_project_service" "iam_api" {
   disable_on_destroy = false
 }
 
+/*
 ####################################################################################
 # Networking
 ####################################################################################
@@ -41,6 +42,8 @@ resource "google_compute_address" "vm_static_ip_query" {
   name = "query-static-ip-master"
   address_type = "EXTERNAL"
 }
+
+*/
 
 ####################################################################################
 # Dataproc Cluster
@@ -94,7 +97,7 @@ resource "google_dataproc_cluster" "mydataproc" {
         "storage-rw",
         "logging-write",
       ]
-      network    = google_compute_network.dataproc_network.name
+      #network    = google_compute_network.dataproc_network.name
       #service_account = var.service_account #optional if you want to choose a service account
     }
 
@@ -103,9 +106,18 @@ resource "google_dataproc_cluster" "mydataproc" {
       script      = "gs://dataproc-initialization-actions/stackdriver/stackdriver.sh"
       timeout_sec = 500
     }
+
+    software_config {
+      override_properties = {
+        "hadoop-env:HADOOP_CLASSPATH" = "$${HADOOP_CLASSPATH}:/etc/tez/conf:/usr/lib/tez/*:/usr/lib/tez/lib/*",
+        "spark:spark.eventLog.enabled" = "false",
+        "dataproc:dataproc.logging.stackdriver.job.driver.enable" = "true"
+      }
+    }
   }
 }
 
+/*
 ####################################################################################
 # Firewalls rules
 ####################################################################################
@@ -134,3 +146,4 @@ resource "google_compute_firewall" "allow_ssh" {
 
  source_ranges = ["0.0.0.0/0"]
 }
+*/
