@@ -74,7 +74,10 @@ steps:
 #      cd environments/$BRANCH_NAME
 #      terraform init  
 #      terraform destroy -auto-approve    
-## [END sh-config]    
+## [END sh-config]
+
+options:
+  logging: CLOUD_LOGGING_ONLY
 
 
 
