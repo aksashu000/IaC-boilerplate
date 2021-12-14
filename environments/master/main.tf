@@ -85,7 +85,10 @@ resource "google_dataproc_cluster" "mydataproc" {
     software_config {
       image_version = var.image_version
       override_properties = {
-        "dataproc:dataproc.allow.zero.workers" = "true"
+        "dataproc:dataproc.allow.zero.workers" = "true",
+        "hadoop-env:HADOOP_CLASSPATH" = "$${HADOOP_CLASSPATH}:/etc/tez/conf:/usr/lib/tez/*:/usr/lib/tez/lib/*",
+        "spark:spark.eventLog.enabled" = "false",
+        "dataproc:dataproc.logging.stackdriver.job.driver.enable" = "true"
       }
     }
 
@@ -105,14 +108,6 @@ resource "google_dataproc_cluster" "mydataproc" {
     initialization_action {
       script      = "gs://dataproc-initialization-actions/stackdriver/stackdriver.sh"
       timeout_sec = 500
-    }
-
-    software_config {
-      override_properties = {
-        "hadoop-env:HADOOP_CLASSPATH" = "$${HADOOP_CLASSPATH}:/etc/tez/conf:/usr/lib/tez/*:/usr/lib/tez/lib/*",
-        "spark:spark.eventLog.enabled" = "false",
-        "dataproc:dataproc.logging.stackdriver.job.driver.enable" = "true"
-      }
     }
   }
 }
