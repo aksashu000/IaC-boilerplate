@@ -76,7 +76,7 @@ variable "service_account" {
 
 variable "image_version" {
   type = string
-  default = "1.4-debian9"
+  default = "2.0-debian10"
 }
 
 
