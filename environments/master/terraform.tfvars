@@ -4,7 +4,7 @@
 # this file to version control.
 
 #Enter your project ID
-project = "terraformdemogcp"
+project = "terraformdemogcp-335111"
 
 #Staging bucket, used used to stage files, such as Hadoop jars, between client machines and the cluster.
 staging_bucket = "terraformdemogcp"
