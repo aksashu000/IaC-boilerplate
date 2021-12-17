@@ -94,11 +94,16 @@ resource "google_dataproc_cluster" "mydataproc" {
 
     gce_cluster_config {
       tags = ["foo", "bar"]
+
       service_account_scopes = [
-        "https://www.googleapis.com/auth/monitoring",
-        "useraccounts-ro",
-        "storage-rw",
-        "logging-write",
+        "https://www.googleapis.com/auth/bigquery",
+        "https://www.googleapis.com/auth/bigtable.admin.table",
+        "https://www.googleapis.com/auth/bigtable.data",
+        "https://www.googleapis.com/auth/cloud.useraccounts.readonly",
+        "https://www.googleapis.com/auth/devstorage.full_control",
+        "https://www.googleapis.com/auth/devstorage.read_write",
+        "https://www.googleapis.com/auth/logging.write",
+        "cloud-platform"
       ]
       #network    = google_compute_network.dataproc_network.name
       #service_account = var.service_account #optional if you want to choose a service account

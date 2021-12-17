@@ -26,7 +26,7 @@ variable "environment" {
 }
 
 variable "machine_types" {
-  type = "map"
+  type = map(string)
   default = {
     "worker" = "n1-standard-2"
     "master" = "n1-standard-2"
@@ -35,7 +35,7 @@ variable "machine_types" {
 }
 
 variable "disk_type" {
-  type = "map"
+  type = map(string)
   default = {
     "worker" = "pd-standard"
     "master" = "pd-standard"
@@ -49,7 +49,7 @@ variable "disk_image" {
  }
 
 variable "disk_size" {
-  type = "map"
+  type = map(string)
   default = {
     "worker" = 100
     "master" = 100
@@ -57,7 +57,7 @@ variable "disk_size" {
 }
 
 variable "count_server" {
-  type = "map"
+  type = map(string)
   default = {
     "worker" = 2
     "master" = 1

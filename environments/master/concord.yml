@@ -1,0 +1,46 @@
+configuration:
+  dependencies:
+    - mvn://com.walmartlabs.concord.plugins:terraform-task:1.38.0
+
+flows:
+  default:
+    - expr: "${jsonStore.get('Default', 'global-config')}"
+      out: global_config
+
+    - form: input
+      yield: true
+      fields:
+        - cluster: { type: "string", allow: "${global_config.clusters}" }
+
+    - log: "${input.cluster} cluster creation has been initiated."
+
+    - task: terraform
+      in:
+        action: apply
+        toolUrl: https://repository.walmart.com/repository/hashicorp-releases/terraform/0.12.16/terraform_0.12.16_linux_amd64.zip
+   #     backend:
+   #       gcs:
+   #         bucket: "${global_config.gcp_buckets.terraform_state_store_bucket}"
+   #         prefix: "state/cluster/${input.cluster}"
+        extraVars:
+          project: "${global_config.gcp_project}"
+          cluster_name: "${input.cluster}"
+          region: "${global_config.cluster_details.get(cluster_name).region}"
+          zone: "${global_config.cluster_details.get(cluster_name).zone}"
+          #subnetwork: "${global_config.cluster_details.get(cluster_name).subnetwork}"
+          #image: "${global_config.cluster_config.vm_image}"
+          bucket: "${global_config.gcp_buckets.job_configuration_bucket}"
+        extraEnv:
+          GOOGLE_CREDENTIALS: "${crypto.exportAsFile(global_config.org, global_config.gcp_access_key, null)}"
+          credentials: "${crypto.exportAsFile(global_config.org, global_config.gcp_access_key, null)}"
+          GOOGLE_APPLICATION_CREDENTIALS: "${crypto.exportAsFile(global_config.org, global_config.gcp_access_key, null)}"
+
+    - task: concord
+      in:
+        action: start
+        project: ${global_config.project}
+        repo: test-notification
+        sync: false
+        arguments:
+          subject: "Test - ${input.cluster} cluster created"
+          message: "Cluster ${input.cluster} has been created successfully."
